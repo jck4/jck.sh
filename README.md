@@ -1,0 +1,2 @@
+# jck.sh
+personal website
