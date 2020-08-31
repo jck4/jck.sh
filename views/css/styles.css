@@ -1,0 +1,136 @@
+html{
+	scroll-behavior: smooth;
+}
+
+body{
+	padding-top: 10vh;
+	padding-left: 10vw;
+	background: #121212
+}
+
+#terminal{
+	
+	overflow: hidden;
+
+}
+
+#divElement{
+
+    margin-top: -50px;
+    margin-left: -50px;
+    width: 100px;
+    height: 100px;
+}​
+
+.terminalText{
+    font-size: 2vw;
+    padding-left: 18px;
+}
+
+
+#terminalTextInput{
+	background: none;
+	border: none;
+    outline: none;
+}
+
+.terminalLine, .previousCommand, .errorLine{
+	padding-left: 18px;
+	padding-top: 5px;
+	color: white
+}
+
+.input-icon {
+    position: relative;
+}
+  
+.commandText{
+	color: rgb(0, 255, 0)
+}
+
+.previousCommand{
+	color: grey
+}
+
+.errorLine{
+	padding-left: 18px;
+	color:red
+}
+
+footer{
+	margin: 0;
+}
+.dib {
+    display: inline-block;
+}
+
+.h2 {
+    height: 2rem;
+}
+
+.link {
+    text-decoration: none;
+    transition: color .15s ease-in;
+}
+
+.link:link, .link:visited {
+    transition: color .15s ease-in;
+}
+
+.link:hover {
+    transition: color .15s ease-in;
+}
+
+.link:active {
+    transition: color .15s ease-in;
+}
+
+.link:focus {
+    transition: color .15s ease-in;
+    outline: 1px dotted currentColor;
+}
+
+.w2 {
+    width: 2rem;
+}
+
+.near-black {
+    color: #111;
+}
+
+.hover-silver:hover {
+    color: #999;
+}
+
+.hover-silver:focus {
+    color: #999;
+}
+
+.pv4 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.ph3 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.mr3 {
+    margin-right: 1rem;
+}
+
+.tc {
+    text-align: center;
+}
+
+.icon{
+	color: #BB86FC
+}
+
+@media screen and (min-width: 30em) {
+    .ph5-ns {
+        padding-left: 4rem;
+        padding-right: 4rem;
+    }
+}

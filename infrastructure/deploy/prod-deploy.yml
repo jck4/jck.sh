@@ -1,0 +1,61 @@
+---
+- name: Create Ec2 instances
+  hosts: localhost
+  # import the secret file
+  vars_files:
+    - awskeys.yml
+  gather_facts: false
+  tasks:
+    # Block is a Group of Tasks combined together
+    - name: Get Info Block
+      block:
+        - name: Get Running instance Info
+
+          ec2_instance_info:
+          register: ec2info
+
+        - name: Print info
+          debug: var="ec2info.instances"
+
+
+      tags: ["always", "getinfoonly"]
+
+    - name: Create EC2 Block
+      block:
+        - name: Launch ec2 instances
+          tags: create_ec2
+          ec2:
+            state: "{{ state }}"
+            region: us-east-1
+            key_name: personal
+            instance_type: t2.micro
+            image: ami-2051294a
+            wait: yes
+            wait_timeout: 500
+            count: 1
+            instance_tags:
+              name: appservers
+              os: ubuntu
+            monitoring: no
+            vpc_subnet_id: subnet-dc054af0
+            assign_public_ip: yes
+          register: ec2
+          delegate_to: localhost
+
+        - name: Add instance to host group
+          add_host:
+            hostname: "{{ item.public_ip }}"
+            groupname: launched
+          loop: "{{ ec2.instances }}"
+
+        - name: Wait for SSH to come up
+          local_action:
+            module: wait_for
+            host: "{{ item.public_ip }}"
+            port: 22
+            delay: 10
+            timeout: 120
+          loop: "{{ ec2.instances }}"
+      # By specifying never on the tag of this block,
+      # I let this block to run only when explicitely being called
+      tags: ["never", "ec2-create"]
