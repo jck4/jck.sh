@@ -1,0 +1,77 @@
+# AWS playbook
+---
+- hosts: localhost
+  connection: local
+  gather_facts: False
+
+  vars:
+    key_name: id_rsa
+    region: us-east-1
+    image: ami-05cf2c352da0bfb2e
+    id: "jck.sh"
+    sec_group: "{{ id }}-sec"
+    vpc_name: jck-vpc
+
+  tasks:
+    #Gather Tasks
+    - name: Gather EC2 info
+      ec2_instance_info:
+        aws_access_key: "{{AWS_ACCESS_KEY_ID}}"
+        aws_secret_key: "{{AWS_SECRET_ACCESS_KEY}}"
+        region: "{{ region }}"
+
+      register: ec2_info
+
+    - name: Gather SG info
+      ec2_group_info:
+        aws_access_key: "{{AWS_ACCESS_KEY_ID}}"
+        aws_secret_key: "{{AWS_SECRET_ACCESS_KEY}}"
+        region: "{{ region }}"
+        filters:
+          group-name:
+            - jck.sh-sec
+
+      register: ec2_group_info
+
+    - name: Gather VPC info
+      ec2_vpc_net_info:
+        aws_access_key: "{{AWS_ACCESS_KEY_ID}}"
+        aws_secret_key: "{{AWS_SECRET_ACCESS_KEY}}"
+        region: "{{ region }}"
+
+      register: vpc
+
+
+      # Display tasks
+    - name: displaying EC2 Info
+      debug: msg="{{item.instance_id}}"
+      with_items: "{{ec2_info.instances}}"
+
+    - name: displaying SG info
+      debug: msg="{{item['group_id']}}"
+      loop: "{{ec2_group_info.security_groups}}"
+
+    - name: displaying VPC info
+      debug: msg="{{item}}"
+      with_items: "{{vpc['vpcs']}}"
+
+    # resource Termination tasks
+    - name: terminate ec2(s)
+      ec2:
+        aws_access_key: "{{AWS_ACCESS_KEY_ID}}"
+        aws_secret_key: "{{AWS_SECRET_ACCESS_KEY}}"
+        instance_ids: "{{item.instance_id}}"
+        region: "{{ region }}"
+        state: absent
+        wait: yes
+
+      with_items: "{{ec2_info.instances}}"
+
+    - name: terminate sg(s)
+      ec2_group:
+        aws_access_key: "{{AWS_ACCESS_KEY_ID}}"
+        aws_secret_key: "{{AWS_SECRET_ACCESS_KEY}}"
+        group_id: "{{item['group_id']}}"
+        region: "{{ region }}"
+        state: absent
+      loop: "{{ec2_group_info.security_groups}}"

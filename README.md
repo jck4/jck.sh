@@ -1,10 +1,13 @@
 # jck.sh
+
+## TODO DOC
 personal website
+
+mini ctf chall 
 
 comes with terminal emulator with personal easter eggs
 
 url shortner
 
-api(can be access through terminal)
+api access through terminal or custom requests
 
-git history rewriter

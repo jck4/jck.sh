@@ -2,10 +2,10 @@ class Terminal {
 
 
     constructor() {
-        this.chunks = ["Welcome to jck.sh you have been dropped into a shell. type 'help' for available commands."]
+        this.chunks = ["Welcome to jck.sh you have been dropped into a shell. Type 'help' for available commands."]
         this.commands = ['help', 'clear', 'info']
         this.history = []
-        this.newLine(chunks[0], "terminalLine")
+        this.newLine(this.chunks[0], "terminalLine")
         this.initListeners()
     }
 
@@ -17,6 +17,7 @@ class Terminal {
     */
 
     newLine(text, lineType) {
+
         var line = document.createElement("p")
         var terminalOutput = document.getElementById("terminalOutput")
         terminalOutput.appendChild(line)
@@ -34,13 +35,11 @@ class Terminal {
 
         if (typeof command === 'string') {
             this.history.push(command)
-
             var lastCommand = document.createElement("p")
             var terminalOutput = document.getElementById("terminalOutput")
             lastCommand.innerText = "> " + command
             lastCommand.classList.add('previousCommand')
             terminalOutput.appendChild(lastCommand)
-
         }
         else {
             console.log("Invalid function call recordHistory")
