@@ -10,3 +10,23 @@ function typeEffect(terminalLine, characterPosistion, stringLength, htmlElement)
     }
   }, 10);
 }
+
+
+function getShortUrl(url,element) {
+fetch('/api/shortenURL',  {
+  method: 'POST',
+  headers: {
+    'Content-Type': undefined
+  },
+
+  body: JSON.stringify({
+      url
+  })
+
+})
+  .then((response) => {
+    return "ye"
+  })
+return 'ye'
+}
+

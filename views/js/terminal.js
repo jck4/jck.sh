@@ -3,7 +3,7 @@ class Terminal {
 
     constructor() {
         this.chunks = ["Welcome to jck.sh you have been dropped into a shell. Type 'help' for available commands."]
-        this.commands = ['help', 'clear', 'info']
+        this.commands = ['help', 'clear', 'info', 'url']
         this.history = []
         this.newLine(this.chunks[0], "terminalLine")
         this.initListeners()
@@ -25,6 +25,8 @@ class Terminal {
         typeEffect(text, 0, text.length, line)
         var terminal = document.getElementById('terminal')
         terminal.scrollTop = terminal.scrollHeight
+
+        return line
     }
 
     /*
@@ -76,6 +78,10 @@ class Terminal {
 
                 case "info":
                     this.newLine("This website is still under construction. More info to come.", "terminalLine")
+                    break;
+
+                case "url":
+                    this.newLine('ye')
                     break;
 
                 case "":
