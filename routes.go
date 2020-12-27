@@ -1,44 +1,22 @@
 package main
 
 import (
-	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
+	controllers "github.com/jck4/jck.sh/controllers"
+	"github.com/gin-gonic/contrib/static"
+	github "github.com/jck4/jck.sh/middleware"
 )
 
-func addRoutes(router *gin.Engine) {
+func addRoutes(r *gin.Engine) {
 
-	router.Use(static.Serve("/", static.LocalFile("./views", true)))
+	r.Use(static.Serve("/", static.LocalFile("./views", true)))
 
-	// Setup route group for the API
-	api := router.Group("/api")
-	{
-		api.GET("/test", func(ctx *gin.Context) {
-			ctx.JSON(200, gin.H{
-				"message": "test. What did you think this would be? ;)"})
-		})
 
-		// api.GET("/{urlShortCode}", redirect)
+	r.GET("/url", controllers.FindURLs)
+	r.POST("/url", controllers.CreateURL)
 
-		api.POST("/shortenURL", func(ctx *gin.Context) {
-			ctx.JSON(200, gin.H{
-				"message": "Pong"})
-		})
 
-	}
+	r.GET("/login", github.LoginHandler)
+    r.GET("/auth", github.Auth)
 
-}
-
-type URLRequestObject struct {
-	URL string `json:"url"`
-}
-
-type URLCollection struct {
-	ActualURL string
-
-	ShortURL string
-}
-type SuccessResponse struct {
-	Code     int
-	Message  string
-	Response URLCollection
 }

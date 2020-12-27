@@ -1,14 +1,22 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/jck4/jck.sh/models"
+	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/contrib/sessions"
+)
 
 func main() {
-	// Set the router as the default one shipped with Gin
-	router := gin.Default()
+	r := gin.Default()
 
-	addRoutes(router)
+	var store = sessions.NewCookieStore([]byte("secret"))
 
-	// Start and run the server
-	router.Run(":8080")
+	r.Use(sessions.Sessions("goquestsession", store))
 
+	addRoutes(r)
+
+	// Connect to database
+	models.ConnectDataBase()
+	r.Run()
 }
+

@@ -9,7 +9,6 @@ class Terminal {
         this.initListeners()
     }
 
-
     /*
         Create paragraph element. 
         append element to terminalOutput
@@ -81,7 +80,7 @@ class Terminal {
                     break;
 
                 case "url":
-                    this.newLine('ye')
+                    this.newLine('ye',"terminalLine")
                     break;
 
                 case "":
