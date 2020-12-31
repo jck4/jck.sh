@@ -3,7 +3,7 @@ class Terminal {
 
     constructor() {
         this.chunks = ["Welcome to jck.sh you have been dropped into a shell. Type 'help' for available commands."]
-        this.commands = ['help', 'clear', 'info', 'url']
+        this.commands = ['help', 'clear', 'info', 'url','login']
         this.history = []
         this.newLine(this.chunks[0], "terminalLine")
         this.initListeners()
@@ -83,6 +83,10 @@ class Terminal {
                     this.newLine('ye',"terminalLine")
                     break;
 
+                case "login":
+                    window.open("http://172.22.241.220:8080/login");
+                    break;
+    
                 case "":
                     this.newLine(input, "terminalLine")
                     break;

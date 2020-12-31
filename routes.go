@@ -2,21 +2,18 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	controllers "github.com/jck4/jck.sh/controllers"
+	// controllers "github.com/jck4/jck.sh/controllers"
 	"github.com/gin-gonic/contrib/static"
-	github "github.com/jck4/jck.sh/middleware"
+	// "github.com/zalando/gin-oauth2/github"
+	// "github.com/gin-gonic/contrib/sessions"
+	// "crypto/rand"
+	// "encoding/base64"
+	// "github.com/golang/glog"
 )
 
-func addRoutes(r *gin.Engine) {
+func addRoutes(router *gin.Engine) {
 
-	r.Use(static.Serve("/", static.LocalFile("./views", true)))
-
-
-	r.GET("/url", controllers.FindURLs)
-	r.POST("/url", controllers.CreateURL)
-
-
-	r.GET("/login", github.LoginHandler)
-    r.GET("/auth", github.Auth)
+	router.Use(static.Serve("/", static.LocalFile("./views", true)))
 
 }
+

@@ -1,51 +1,121 @@
+
 package main
 
 import (
 	"flag"
 	"fmt"
-	"os"
-	"path"
-	"github.com/gin-gonic/gin"
-	"github.com/zalando/gin-oauth2/github"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"github.com/dghubble/gologin/v2"
+	"github.com/dghubble/gologin/v2/github"
+	"github.com/dghubble/sessions"
+	"golang.org/x/oauth2"
+	githubOAuth2 "golang.org/x/oauth2/github"
 )
 
-var redirectURL, credFile string
+const (
+	sessionName     = "jck"
+	sessionSecret   = "test"
+	sessionUserKey  = "githubID"
+	sessionUsername = "githubUsername"
+)
 
-func init() {
-	bin := path.Base(os.Args[0])
-	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, `
-Usage of %s
-================
-`, bin)
-		flag.PrintDefaults()
-	}
-	flag.StringVar(&redirectURL, "redirect", "http://127.0.0.1:8080/auth/", "URL to be redirected to after authorization.")
-	flag.StringVar(&credFile, "cred-file", "./creds.json", "Credential JSON file")
+// sessionStore encodes and decodes session data stored in signed cookies
+var sessionStore = sessions.NewCookieStore([]byte(sessionSecret), nil)
+
+// Config configures the main ServeMux.
+type Config struct {
+	GithubClientID     string
+	GithubClientSecret string
 }
-func main() {
-	flag.Parse()
 
-	scopes := []string{
-		"repo",
-		// You have to select your own scope from here -> https://developer.github.com/v3/oauth/#scopes
+// New returns a new ServeMux with app routes.
+func New(config *Config) *http.ServeMux {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", profileHandler)
+	mux.HandleFunc("/logout", logoutHandler)
+	// 1. Register LoginHandler and CallbackHandler
+	oauth2Config := &oauth2.Config{
+		ClientID:     config.GithubClientID,
+		ClientSecret: config.GithubClientSecret,
+		RedirectURL:  "http://172.22.241.220:8080/auth",
+		Endpoint:     githubOAuth2.Endpoint,
 	}
-	secret := []byte("secret")
-	sessionName := "jcksession"
-	router := gin.Default()
-	// init settings for github auth
-	github.Setup(redirectURL, credFile, scopes, secret)
-	router.Use(github.Session(sessionName))
+	// state param cookies require HTTPS by default; disable for localhost development
+	stateConfig := gologin.DebugOnlyCookieConfig
+	mux.Handle("/login", github.StateHandler(stateConfig, github.LoginHandler(oauth2Config, nil)))
+	mux.Handle("/auth", github.StateHandler(stateConfig, github.CallbackHandler(oauth2Config, issueSession(), nil)))
+	return mux
+}
 
-	router.GET("/login", github.LoginHandler)
+// issueSession issues a cookie session after successful Github login
+func issueSession() http.Handler {
+	fn := func(w http.ResponseWriter, req *http.Request) {
+		ctx := req.Context()
+		githubUser, err := github.UserFromContext(ctx)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		// 2. Implement a success handler to issue some form of session
+		session := sessionStore.New(sessionName)
+		session.Values[sessionUserKey] = *githubUser.ID
+		session.Values[sessionUsername] = *githubUser.Login
+		session.Save(w)
+		http.Redirect(w, req, "/profile", http.StatusFound)
+	}
+	return http.HandlerFunc(fn)
+}
 
-	// protected url group
-	private := router.Group("/auth")
-	private.Use(github.Auth())
-	
-	private.GET("/", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{"message": "Hello from private for groups"})
-	})
+// profileHandler shows a personal profile or a login button (unauthenticated).
+func profileHandler(w http.ResponseWriter, req *http.Request) {
+	session, err := sessionStore.Get(req, sessionName)
+	if err != nil {
+		// welcome with login button
+		page, _ := ioutil.ReadFile("home.html")
+		fmt.Fprintf(w, string(page))
+		return
+	}
+	// authenticated profile
+	fmt.Fprintf(w, `<p>You are logged in %s!</p><form action="/logout" method="post"><input type="submit" value="Logout"></form>`, session.Values[sessionUsername])
+}
 
-	router.Run("127.0.0.1:8080")
+// logoutHandler destroys the session on POSTs and redirects to home.
+func logoutHandler(w http.ResponseWriter, req *http.Request) {
+	if req.Method == "POST" {
+		sessionStore.Destroy(w, sessionName)
+	}
+	http.Redirect(w, req, "/", http.StatusFound)
+}
+
+// main creates and starts a Server listening.
+func main() {
+	const address = "172.22.241.220:8080"
+	// read credentials from environment variables if available
+	config := &Config{
+
+	}
+	// allow consumer credential flags to override config fields
+	clientID := flag.String("client-id", "", "Github Client ID")
+	clientSecret := flag.String("client-secret", "", "Github Client Secret")
+	flag.Parse()
+	if *clientID != "" {
+		config.GithubClientID = *clientID
+	}
+	if *clientSecret != "" {
+		config.GithubClientSecret = *clientSecret
+	}
+	if config.GithubClientID == "" {
+		log.Fatal("Missing Github Client ID")
+	}
+	if config.GithubClientSecret == "" {
+		log.Fatal("Missing Github Client Secret")
+	}
+
+	log.Printf("Starting Server listening on %s\n", address)
+	err := http.ListenAndServe(address, New(config))
+	if err != nil {
+		log.Fatal("ListenAndServe: ", err)
+	}
 }

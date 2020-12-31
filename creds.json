@@ -1,4 +1,6 @@
 {
     "clientid": "",
-    "secret": "" // Invalidated. 
+    "secret": "",
+    "redirectURL": "http://172.22.241.220:8080/auth",
+    "homePage": "http://172.22.241.220:8080"
 }

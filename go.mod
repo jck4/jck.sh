@@ -4,13 +4,14 @@ go 1.14
 
 require (
 	github.com/boj/redistore v0.0.0-20180917114910-cd5dcc76aeff // indirect
+	github.com/dghubble/gologin/v2 v2.2.0
+	github.com/dghubble/sessions v0.1.0
 	github.com/gin-gonic/autotls v0.0.3
 	github.com/gin-gonic/contrib v0.0.0-20200810162008-6dee08bf958e
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/google/go-github v17.0.0+incompatible
-	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/sessions v1.2.1
 	github.com/jinzhu/gorm v1.9.16
