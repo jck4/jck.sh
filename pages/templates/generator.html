@@ -1,0 +1,20 @@
+{% extends "index.html" %}
+{% block head %}	
+   {% load static %}
+   <script type = "text/javascript" src="{% static 'js/clipboard.js' %}"></script>
+   <script type = "text/javascript" src="{% static 'js/generate.js' %}"></script>
+{% endblock %}
+
+{% block content %}	
+      <div class="bg-light-dark-grey br4 ba b--white-50 pl2 pr2 w-70 pt">
+         <h1 class="center">
+            Simple Secure Password Generator
+         </h1>
+         <form class="pa4" onchange="generatePass()" onsubmit="generatePass();return false">
+            Password Length
+            <input type="number" id="passLength" name="number" min="8" max="100" onchange="generatePass()">
+         </form>
+         <div class="bg-navy br4 tc pa4 flex-wrap overflow-y-auto clipboard" onclick="clipboard()" id="passwordBox"></div>
+      </div>
+{% endblock %}
+

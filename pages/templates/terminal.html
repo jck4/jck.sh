@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+{% block head %}	
+   {% load static %}
+   <script type = "text/javascript" src="{% static 'js/helper.js' %}"></script>
+   <script type = "text/javascript" src="{% static 'js/terminal.js' %}"></script>
+{% endblock %}
+
+{% block content %}	
+      <div id="terminal" class='bg-black br2 dib vh-50 w-90 code green ba'>
+         <div id="terminalOutput"></div>
+         <div id="inputLine" class="terminalLine">
+            <span>></span>
+            <input type="text" id="terminalTextInput" class="commandText" autofocus>
+         </div>
+      </div>
+{% endblock %}
+

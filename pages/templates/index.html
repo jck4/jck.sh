@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<head>
+   {% load static %}
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="https://unpkg.com/tachyons/css/tachyons.min.css">
+   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+   <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}"/>
+   <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" media="all"/> 
+   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"> </script> 
+   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+   {% block head %}
+   {% endblock %}
+</head>
+<body class="code white">
+
+{% include 'nav.html' %}
+{% block content %}
+{% endblock %}
+</div> 
+
+
+</body>
+</html>
+

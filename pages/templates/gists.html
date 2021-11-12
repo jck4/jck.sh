@@ -1,0 +1,27 @@
+{% extends "index.html" %}
+{% block head %}	
+{% load static %}
+    <script type="text/javascript" src="{% static "js/search.js" %}"></script>
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+{# Search bar for gists. Load top 20 gists automatically. automatically load gists that fit search query#}
+<div>
+<div class="searchbarDiv">
+<h3>Gists</h3>
+<input class="searchbar" type="text" id="search" placeholder="Search Gists" />
+</div>
+
+<div class ="content">
+</div>
+</div>
+
+{% endblock %}
+
+
+
