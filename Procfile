@@ -1,1 +1,1 @@
-web: gunicorn jck.wsgi --log-file -
+web: gunicorn jck.wsgi
