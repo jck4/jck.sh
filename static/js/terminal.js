@@ -84,7 +84,7 @@ class Terminal {
                     break;
 
                 case "login":
-                    window.open("http://172.22.241.220:8080/login");
+                    window.open("https://172.22.241.220:8080/login");
                     break;
     
                 case "":
