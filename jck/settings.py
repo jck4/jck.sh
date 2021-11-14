@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "pages",
     "rest_framework",
     "storages",    
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -55,7 +56,14 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True 
+# CORS_ORIGIN_ALLOW_ALL = True 
+
+CORS_ALLOWED_ORIGINS = [
+    "https://www.jck.sh",
+    "http://www.jck.sh",
+    "http://localhost:8080",
+
+]
 
 ROOT_URLCONF = "jck.urls"
 
