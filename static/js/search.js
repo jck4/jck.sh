@@ -8,7 +8,7 @@ $(document).ready(function () {
         var searchVal = searchBoxContents.value
         var params = { search: searchVal };
 
-        var url = new URL('jck.sh/gists/')
+        var url = new URL('https://www.jck.sh/gists/')
         url.search = new URLSearchParams(params).toString();
 
         var gistCards = jQuery('<div>', {
