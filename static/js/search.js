@@ -1,7 +1,5 @@
 
-
 $(document).ready(function () {
-
 
     $("input").keyup(function () {
         var searchBoxContents = document.getElementById('search');
