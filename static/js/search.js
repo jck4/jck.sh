@@ -31,7 +31,7 @@ $(document).ready(function () {
 
                 for (var i in gists){
                     const card = `
-                    <div class="card" id="card">
+                    <div class="cardg" id="card">
                         <h2 class="title">${gists[i].title}</h2>
                         <div class="description">${gists[i].description}</div>
                         <div class="text">${gists[i].text}</div>
